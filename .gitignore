@@ -1,0 +1,17 @@
+*-debug.log
+*-error.log
+/.nyc_output
+/dist
+/bin
+/tmp
+/yarn.lock
+node_modules
+.DS_Store
+.iml
+.ipr
+.iws
+.idea
+.serverless/
+*.iml
+local.json
+.env

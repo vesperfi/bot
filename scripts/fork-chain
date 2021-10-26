@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+. .env
+
+scripts/kill-ganache-cli
+
+# caller script will pass --quiet param as $2
+npx ganache-cli --fork "$NODE_URL" --host 0.0.0.0 --mnemonic "$MNEMONIC" -e 1000 --quiet &

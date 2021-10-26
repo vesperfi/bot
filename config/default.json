@@ -1,0 +1,143 @@
+{
+  "vesper": {
+    "ddbTransactionTable": "vesper_bot_transaction",
+    "dashboardApiUrl": "https://api.vesper.finance/dashboard?version=2",
+    "polygonDashboardApiUrl": "https://api-polygon.vesper.bloqrock.net/dashboard?version=2",
+    "txnType": 2,
+    "embargo": 64,
+    "pendingTime": 1,
+    "minimumFeeTransferAmount": 5000,
+    "gasPriceVariationPercentage": 15,
+    "ignoreTxnAboveGasPrice": 150,
+    "priority": "low",
+    "flashBotGasMultiplier": 160,
+    "treasury": "0x9dfC7054B78E6f48f2D8e064B95B4251fc2E9692",
+    "minter": "0xb652Fc42E12828F3F1b3e96283b199E62EC570Db",
+    "uniswap": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    "vesperSwapManager": "0xe382d9f2394A359B01006faa8A1864b8a60d2710",
+    "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "comp": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
+    "comptroller": "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
+    "depositAll": {
+      "collateralPercentage": 0.04,
+      "vDAI": {
+        "collateralPercentage": 0.01
+      }
+    },
+    "rebalance": {
+      "vVSP": {
+        "embargo": 2
+      },
+      "vfrcDAI": {
+        "embargo": 160
+      },
+      "vfrsDAI": {
+        "embargo": 160
+      },
+      "vaDAI": {
+        "embargo": 40
+      },
+      "vUNI": {
+        "embargo": 40
+      }
+    },
+    "claimComp": {
+      "minBalance": "3000000000000000000"
+    },
+    "resurface": {
+      "embargo": 1,
+      "priority": "high"
+    },
+    "updateOracles": {
+      "embargo": 0.5
+    },
+    "rebalanceCollateral": {
+      "highWaterBufferPercentage": 10,
+      "highWater": true,
+      "lowWater": true,
+      "embargo": 1,
+      "vLINK": {
+        "highWater": false
+      }
+    },
+    "accrueInterest": {
+      "embargo": 0.5,
+      "v2Pools": [
+        {
+          "name": "vETH",
+          "poolAddress": "0x103cc17C2B1586e5Cd9BaD308690bCd0BBe54D5e",
+          "cToken": "0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5"
+        },
+        {
+          "name": "vLINK",
+          "poolAddress": "0x0a27E910Aee974D05000e05eab8a4b8Ebd93D40C",
+          "cToken": "0xface851a4921ce59e912d19329929ce6da6eb0c7"
+        },
+        {
+          "name": "vUSDC",
+          "poolAddress": "0x0C49066C0808Ee8c673553B7cbd99BCC9ABf113d",
+          "cToken": "0x39aa39c021dfbae8fac545936693ac917d5e7563"
+        },
+        {
+          "name": "vWBTC",
+          "poolAddress": "0x4B2e76EbBc9f2923d83F5FBDe695D8733db1a17B",
+          "cToken": "0xccf4429db6322d5c611ee964527d42e5d685dd6a"
+        }
+      ]
+    },
+    "revenueConfig": {
+      "address": "0xAdB5ef0CA9029b340bCCDEf005aef442C7F91C96",
+      "payeeCount": 2,
+      "tokens": [
+        {
+          "address": "0x0C49066C0808Ee8c673553B7cbd99BCC9ABf113d",
+          "minBalance": "1000000000000000000000",
+          "symbol": "vUSDC"
+        },
+        {
+          "address": "0x103cc17c2b1586e5cd9bad308690bcd0bbe54d5e",
+          "minBalance": "400000000000000000",
+          "symbol": "vETH"
+        },
+        {
+          "address": "0x4b2e76ebbc9f2923d83f5fbde695d8733db1a17b",
+          "minBalance": "2000000000000000",
+          "symbol": "vWBTC"
+        },
+        {
+          "address": "0xca0c34a3f35520b9490c1d58b35a19ab64014d80",
+          "minBalance": "1000000000000000000000",
+          "symbol": "vDAI"
+        },
+        {
+          "address": "0x0a27e910aee974d05000e05eab8a4b8ebd93d40c",
+          "minBalance": "50000000000000000000",
+          "symbol": "vLINK"
+        },
+        {
+          "address": "0xBA680a906d8f624a5F11fba54D3C672f09F26e47",
+          "minBalance": "1000000000000000000000",
+          "symbol": "vUSDT"
+        },
+        {
+          "address": "0xfF43C327410F960261057ba1DA787eD78B42c257",
+          "minBalance": "50000000000000000000",
+          "symbol": "vUNI"
+        }
+      ]
+    }
+  },
+  "aws": {
+    "bucket": "vesper-bot-dev",
+    "region": "us-east-2"
+  },
+  "logger": {
+    "Console": {
+      "level": "debug"
+    },
+    "Papertrail": {
+      "level": "info",
+      "program": "vesper-bot-stage"
+    }
+  }
+}

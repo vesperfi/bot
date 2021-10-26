@@ -1,0 +1,51 @@
+service: vesper-bot
+app: vesper-bot
+useDotenv: true
+frameworkVersion: "2"
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: us-east-2
+  timeout: 240
+  stage: ${opt:stage, 'dev'}
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    DEPLOYMENT_ACCOUNT_KEY: ${self:custom.${self:provider.stage}.DEPLOYMENT_ACCOUNT_KEY}
+    FLASHBOT_ACCOUNT_KEY: ${self:custom.${self:provider.stage}.FLASHBOT_ACCOUNT_KEY}
+    NODE_URL: ${self:custom.${self:provider.stage}.NODE_URL}
+    POLYGON_NODE_URL: ${self:custom.${self:provider.stage}.POLYGON_NODE_URL}
+    FLASHBOT_SIGN_KEY: "vesper-bot-stage-FLASHBOT_SIGN_KEY"
+    BUCKET: ${self:custom.${self:provider.stage}.BUCKET}
+    REGION: ${self:provider.region}
+    STAGE: ${self:provider.stage}
+custom:
+  dev:
+    DEPLOYMENT_ACCOUNT_KEY: "vesper-bot-dev-DEPLOYMENT_ACCOUNT_KEY"
+    FLASHBOT_ACCOUNT_KEY: "vesper-bot-dev-ARB_ACCOUNT_KEY"
+    NODE_URL: "http://localhost:8545"
+    POLYGON_NODE_URL: "http://localhost:8545"
+    BUCKET: "vesper-bot-dev"
+  stage:
+    DEPLOYMENT_ACCOUNT_KEY: "vesper-bot-stage-DEPLOYMENT_ACCOUNT_KEY"
+    FLASHBOT_ACCOUNT_KEY: "vesper-bot-stage-ARB_ACCOUNT_KEY"
+    NODE_URL: "vesper-bot-stage-NODE_URL"
+    POLYGON_NODE_URL: "vesper-bot-stage-POLYGON_NODE_URL"
+    BUCKET: "vesper-bot-stage"
+
+package:
+  exclude:
+    - test/**
+    - .git/**
+    - .github/**
+    - .husky/**
+    - .env
+    - scripts/**
+
+functions:
+  - ${file(src/controller/.routes.yml)}

@@ -1,0 +1,16 @@
+{
+  "eth": {
+    "url": "NODE_URL",
+    "polygonUrl": "POLYGON_NODE_URL",
+    "flashbotSignKey": "FLASHBOT_SIGN_KEY",
+    "deploymentSecretKeyName": "DEPLOYMENT_ACCOUNT_KEY",
+    "flashbotSecretKeyName": "FLASHBOT_ACCOUNT_KEY"
+  },
+  "env": {
+    "stage": "STAGE"
+  },
+  "aws": {
+    "bucket": "BUCKET",
+    "region": "REGION"
+  }
+}

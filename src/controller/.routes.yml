@@ -1,0 +1,197 @@
+deployFund:
+  handler: src/controller/pool.deployFund
+  timeout: 900
+  events:
+    - schedule:
+        rate: cron(10 0 ? * 1,5 *)
+        input:
+          pools: "vETH,vWBTC"
+
+rebalance:
+  handler: src/controller/pool.rebalance
+  timeout: 900
+  events:
+    # Legacy V2 pools with single strategy
+    - schedule:
+        rate: cron(0 0-6,12-18 ? * * *)
+        input:
+          pools: "vBetaUSDC"
+
+    - schedule:
+        rate: cron(5 0-6,12-18 ? * * *)
+        input:
+          pools: "vDAI"
+          version: "2.x"
+
+    - schedule:
+        rate: cron(45 0-6,12-18 ? * * *)
+        input:
+          pools: "vETH"
+
+    - schedule:
+        rate: cron(55 0-6,12-18 ? * * *)
+        input:
+          pools: "vWBTC"
+
+    - schedule:
+        rate: cron(50 0-6,12-18 ? * * *)
+        input:
+          pools: "vUSDC"
+
+    - schedule:
+        rate: cron(25 0-6,12-18 ? * * *)
+        input:
+          pools: "vLINK"
+
+    - schedule:
+        rate: cron(10 13 * * ? *)
+        input:
+          pools: "vVSP"
+          sendViaFlashBots: false
+
+    # V3 pools with multiple strategies
+    - schedule:
+        rate: cron(40 0-6,12-18 ? * * *)
+        input:
+          pools: "vUSDT"
+
+    - schedule:
+        rate: cron(35 0-6,12-18 ? * * *)
+        input:
+          pools: "vUNI"
+
+    - schedule:
+        rate: cron(30 0-6,12-18 ? * * *)
+        input:
+          pools: "vaDAI"
+
+    - schedule:
+        rate: cron(25 0-6,12-18 ? * * *)
+        input:
+          pools: "veETH-DAI"
+
+    - schedule:
+        rate: cron(20 0-6,12-18 ? * * *)
+        input:
+          pools: "vDAI"
+          version: "3.0.4"
+
+    - schedule:
+        rate: cron(15 0-6,12-18 ? * * *)
+        input:
+          pools: "vaETH"
+
+    - schedule:
+        rate: cron(45 0-6,12-18 ? * * *)
+        input:
+          pools: "vaWBTC"
+
+    - schedule:
+        rate: cron(50 0-6,12-18 ? * * *)
+        input:
+          pools: "vfrcDAI"
+
+    - schedule:
+        rate: cron(45 0-6,12-18 ? * * *)
+        input:
+          pools: "vfrsDAI"
+
+# rebalanceCollateral:
+#   handler: src/controller/pool.rebalanceCollateral
+#   timeout: 900
+#   events:
+#     # Call every hour at 20th minute
+#     - schedule:
+#         rate: cron(20 * * * ? *)
+#         input:
+#           pools: 'vETH,vWBTC'
+#           highWater: true
+#           lowWater: true
+
+resurface:
+  handler: src/controller/pool.resurface
+  events:
+    - schedule:
+        rate: cron(40 * * * ? *)
+
+splitRevenue:
+  handler: src/controller/pool.splitRevenue
+  timeout: 900
+  events:
+    - schedule: cron(30 10 ? * 6 *)
+    - http:
+        path: /splitRevenue
+        method: get
+
+feeTransfer:
+  handler: src/controller/pool.feeTransfer
+  timeout: 900
+  events:
+    - schedule: cron(40 10 ? * 3 *)
+
+getRebalanceSummary:
+  handler: src/controller/transaction.getRebalanceSummary
+  events:
+    - http:
+        path: /getRebalanceSummary
+        method: get
+        cors: true
+  timeout: 60
+
+claimComp:
+  handler: src/controller/pool.claimComp
+  timeout: 900
+  events:
+    - schedule: cron(30 12 ? * 3,6 *)
+
+accrueInterest:
+  handler: src/controller/pool.accrueInterest
+  timeout: 900
+  events:
+    - schedule: cron(35 * * * ? *)
+
+# updateOracles:
+#   handler: src/controller/route.updateOracles
+#   timeout: 900
+#   events:
+#     - schedule:
+#         rate: cron(5 * ? * * *)
+
+# Define polygon network configuration below.
+polygon_rebalance:
+  handler: src/controller/pool.rebalance
+  environment:
+    network: polygon
+  timeout: 900
+  events:
+    - schedule:
+        rate: cron(0 0-6,12-18 ? * * *)
+        input:
+          pools: "vDAI"
+    - schedule:
+        rate: cron(10 0-6,12-18 ? * * *)
+        input:
+          pools: "vUSDC"
+    - schedule:
+        rate: cron(15 0-6,12-18 ? * * *)
+        input:
+          pools: "vUSDT"
+    - schedule:
+        rate: cron(15 0-6,12-18 ? * * *)
+        input:
+          pools: "vWBTC"
+    - schedule:
+        rate: cron(20 0-6,12-18 ? * * *)
+        input:
+          pools: "vWETH"
+
+getPolygonRebalanceSummary:
+  handler: src/controller/transaction.getRebalanceSummary
+  environment:
+    network: polygon
+  events:
+    - http:
+        path: /getPolygonRebalanceSummary
+        method: get
+        cors: true
+  timeout: 60
