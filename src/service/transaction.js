@@ -3,7 +3,8 @@ const {BigNumber: BN} = require('ethers')
 const ethers = require('ethers')
 const config = require('config')
 const {saveTransaction} = require('../util/transactionUtil')
-const {getGasPrice, getProvider, getNetwork, getChainId, isPolygon} = require('../ethers/eth')
+const {getGasPrice, getProvider, getNetwork, getChainId, isPolygon, getNetworkUrl} = require('../ethers/eth')
+const {FORK_ETH_URL} = require('../enum/network')
 const {getLogger} = require('../util/logger')
 const {Priority} = require('../enum/priority')
 const {Status} = require('../enum/status')
@@ -87,8 +88,8 @@ function prepareSignedTxn(params, contractObj, methodName, methodArgs) {
         to: encodedData.to,
         chainId: getChainId(),
       }
-      if (isPolygon() || config.vesper.txnType === 0) {
-        // polygon use legacy
+      if (isPolygon() || config.vesper.txnType === 0 || getNetworkUrl() === FORK_ETH_URL) {
+        // polygon and fork use legacy
         txnParams.gasPrice = BN.from(params.gasPrice).toHexString()
       } else {
         txnParams.type = config.vesper.txnType

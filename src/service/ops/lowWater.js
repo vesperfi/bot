@@ -2,61 +2,47 @@
 
 const config = require('config')
 const ethers = require('ethers')
-const {isRecentTransaction} = require('../recent')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
-// const {send} = require('../transaction')
-const {getGasPrice, getProvider} = require('../../ethers/eth')
-const {getWallet} = require('../../ethers/eth')
+const {send} = require('../transaction')
+const {getGasPrice, getWallet} = require('../../ethers/eth')
 const strategyAbi = require('../../abi/strategy.json')
-const {getLogger} = require('../../util/logger')
-
-const operation = Operation.RESURFACE
-const skipPoolFromResurface = 'veETH-DAI'
-
-function isUnderwater(data) {
-  const contract = new ethers.Contract(data.strategy.address, strategyAbi, getProvider())
-  return contract.isUnderwater()
-}
+const collateralManagerAbi = require('../../abi/collateralManagerAbi.json')
+const operation = Operation.LOW_WATER
 
 async function shouldSkipTheJob(data) {
-  return isUnderwater(data).then(function (result) {
-    const logger = getLogger()
-    if (result) {
-      if (skipPoolFromResurface === data.name) {
-        logger.warn(
-          'Underwater alert: Strategy: %s (%s), pool: %s (%s) is underwater, Check if manual resurface is needed.',
-          data.strategy.info,
-          data.strategy.address,
-          data.name,
-          data.contract.address
-        )
-        return true
-      }
-      return isRecentTransaction(data)
-    }
-    logger.info('Pool : %s is not underwater, skipping resurface operation', data.name)
-    return true
+  return getWallet().then(function (wallet) {
+    const strategyContract = new ethers.Contract(data.strategy.address, strategyAbi, wallet)
+    return strategyContract.lowWater().then(function (lowWater) {
+      return strategyContract.cm().then(function (collateralManager) {
+        const cmContract = new ethers.Contract(collateralManager, collateralManagerAbi, wallet)
+        return cmContract.getVaultInfo(data.strategy.address).then(function (vaultInfo) {
+          console.log(vaultInfo.collateralRatio.toString())
+          console.log(lowWater.toString())
+          return vaultInfo.collateralRatio.eq(0) || vaultInfo.collateralRatio.gt(lowWater)
+        })
+      })
+    })
   })
 }
 
 function run(data) {
   const priority = config.vesper[data.operation].priority || config.vesper.priority
+  // Strategy is low water, call rebalance operation
+  data.operation = Operation.REBALANCE
   return getGasPrice(data.blockingTxnGasPrice).then(function (gasPrice) {
     const params = {
       pool: data.name,
       nonce: data.nonce,
-      operation,
+      operation: data.operation,
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.strategy.address,
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address
-      // TODO Temp commented
-      // const contract = new ethers.Contract(params.toAddress, strategyAbi, wallet)
-      // return send(params, contract, params.operation)
-      return data
+      const contract = new ethers.Contract(params.toAddress, strategyAbi, wallet)
+      return send(params, contract, Operation.REBALANCE)
     })
   })
 }

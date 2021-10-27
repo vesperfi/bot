@@ -116,6 +116,7 @@ async function getBalance(erc20Token, address) {
 
 module.exports = {
   getNetwork,
+  getNetworkUrl,
   getChainId,
   isPolygon,
   getDashboardApiUrl,

@@ -5,12 +5,12 @@ const Secret = require('../util/secret')
 const secret = new Secret()
 const deposit = require('../service/ops/deposit')
 const rebalanceCollateral = require('../service/ops/rebalanceCollateral')
+const lowWater = require('../service/ops/lowWater')
 const rebalance = require('../service/ops/rebalance')
 const resurface = require('../service/ops/resurface')
 const splitRevenue = require('../service/ops/splitRevenue')
 const claimComp = require('../service/ops/claimComp')
 const feeTransfer = require('../service/ops/feeTransfer')
-
 const accrueInterest = require('../service/ops/accrueInterest')
 const {prepareErrorResponse, prepareSuccessMessage} = require('../util/utils')
 const {Operation} = require('../enum/operation')
@@ -31,7 +31,8 @@ async function execute(input) {
     claimComp,
     feeTransfer,
     accrueInterest,
-  ].filter(item => item.operation === input.operation)[0]  
+    lowWater,
+  ].filter(item => item.operation === input.operation)[0]
   return secret.initSecret().then(function () {
     return opObj
       .prepare(input)
@@ -83,16 +84,20 @@ module.exports.resurface = () => {
   return execute({operation: Operation.RESURFACE})
 }
 
+module.exports.lowWater = () => {
+  return execute({operation: Operation.LOW_WATER})
+}
+
 module.exports.splitRevenue = () => {
-  return execute({operation: Operation.SPLIT_REVENUE_ERC20, pools: 'All'})
+  return execute({operation: Operation.SPLIT_REVENUE_ERC20})
 }
 
 module.exports.claimComp = () => {
-  return execute({operation: Operation.CLAIM_COMP, pools: 'vusd'})
+  return execute({operation: Operation.CLAIM_COMP})
 }
 
 module.exports.feeTransfer = () => {
-  return execute({operation: Operation.FEE_TRANSFER, pools: 'All'})
+  return execute({operation: Operation.FEE_TRANSFER})
 }
 
 module.exports.accrueInterest = () => {
