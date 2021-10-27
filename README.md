@@ -36,27 +36,7 @@ Vesper bot automate pool operations.
   npm run fork
   ```
 
-### Testing
-
-#### Deploy fund
-This function will deposit fund to corresponding market provider.
-
-```
-serverless invoke local --function deployFund --data '{"pools": "vDAI,vLINK,vETH"}'
-```
-
-#### Rebalance Collateral
-This function will rebalance collateral ratio for maker strategies.
-
-```
-serverless invoke local --function rebalanceCollateral --data '{"pools": "vLINK"}'
-```
-
-#### Resurface
-This function will resurface pool if it goes under water for maker strategies.
-```
-serverless invoke local --function resurface
-```
+### Testing with fork
 
 #### Rebalance
 In this function will deposit/withdraw fund from pool/strategies and market providers.
@@ -78,29 +58,24 @@ This function split revenue between Vesper strategy developer and VBC after dedu
 serverless invoke local --function splitRevenue
 ```
 
-#### Update Oracles
-This function will update oracles.
-```
-serverless invoke local --function updateOracles
-```
+#### V3 Pool functions
 
-#### VUSD Claim COMP
-This function will claim comp from VUSD treasury and convert to one of allowed tokens.
-```
-serverless invoke local --function claimComp
-```
+- `lowWater` - This function will call rebalance if a maker strategy is lowWater.
+- `feeTransfer` - This function will sweep erc20 tokens (vtokens) from strategies.
+- `updateOracles` - This function will update oracles.
 
-#### Transfer Fee to v3 Pool
-This function will sweep erc20 tokens (vtokens) from strategies.
-```
-serverless invoke local --function feeTransfer
-```
 
-#### V2 Pools accrueInterest
-This function calls accrue interest` on V2 pools.
-```
-serverless invoke local --function accrueInterest
-```
+#### V2 Pools Functions
+
+- `accrueInterest` - This function calls accrue interest` on V2 pools.
+- `resurface` - This function will resurface pool if it goes under water for maker strategies.
+- `rebalanceCollateral` - This function will rebalance collateral ratio for maker strategies.
+- `deployFund` - This function will deposit fund to corresponding market provider.
+
+#### VUSD Functions
+
+- `claimComp` - This function will claim comp from VUSD treasury and convert to one of allowed tokens.
+
 
 ### AWS deployment (Secret/Dynamodb/Lambda)
 

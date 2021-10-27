@@ -45,7 +45,11 @@
       "minBalance": "3000000000000000000"
     },
     "resurface": {
-      "embargo": 1,
+      "embargo": 0.5,
+      "priority": "high"
+    },
+    "lowWater": {
+      "embargo": 0.5,
       "priority": "high"
     },
     "updateOracles": {

@@ -5,6 +5,7 @@ const rebalanceCollateral = require('./rebalanceCollateral')
 const rebalance = require('./rebalance')
 const resurface = require('./resurface')
 const splitRevenue = require('./splitRevenue')
+const lowWater = require('./lowWater')
 const updateOracles = require('./updateOracles')
 const claimComp = require('../../service/ops/claimComp')
 const {getContractMetadata} = require('../../util/contract')
@@ -15,6 +16,7 @@ const {Status} = require('../../enum/status')
 const {syncPendingTransactions} = require('../sync')
 const {getWallet} = require('../../ethers/eth')
 const {findBestNonceAndBlockingTxn} = require('../nonce')
+const MAKER = 'Maker'
 
 async function before(data) {
   return syncPendingTransactions().then(function () {
@@ -39,6 +41,7 @@ function getOperationObject(data) {
     splitRevenue,
     updateOracles,
     claimComp,
+    lowWater,
   ].filter(item => item.operation === data.operation)[0]
   if (data.strategy && data.strategy.makerVaultInfo !== undefined && data.operation === deposit.operation) {
     data.operation = rebalanceCollateral.operation
@@ -80,6 +83,7 @@ async function after(data) {
 }
 
 async function prepare(input) {
+  input.pools = input.pools ? input.pools : ''
   return getContractMetadata(
     input.pools.split(',').map(pool => ({
       name: pool,
@@ -95,9 +99,31 @@ async function prepare(input) {
   })
 }
 
+async function prepareMakerStrategies(input, operationObj) {
+  input.pools = input.pools ? input.pools : ''
+  const jobsWithStrategies = []
+  return getContractMetadata(input.pools.split(',').map(pool => ({name: pool, operation: input.operation}))).then(
+    function (jobs) {
+      jobs.forEach(function (job) {
+        job.strategies.forEach(function (strategy) {
+          const strategyJob = Object.assign({}, job)
+          strategyJob.operationObj = operationObj
+          strategyJob.operation = input.operation
+          strategyJob.strategy = strategy
+          if (strategy.info.split(':')[0].includes(MAKER)) {
+            jobsWithStrategies.push(strategyJob)
+          }
+        })
+      })
+      return jobsWithStrategies
+    }
+  )
+}
+
 module.exports = {
   before,
   prepare,
+  prepareMakerStrategies,
   after,
   error,
 }

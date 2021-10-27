@@ -9,7 +9,8 @@ const Operation = {
   UPDATE_ORACLES: 'updateOracles',
   CLAIM_COMP: 'claimComp',
   FEE_TRANSFER: 'feeTransfer',
-  ACCRUE_INTEREST: 'accrueInterest'
+  ACCRUE_INTEREST: 'accrueInterest',
+  LOW_WATER: 'lowWater',
 }
 
 module.exports = {

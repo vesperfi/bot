@@ -96,6 +96,14 @@ rebalance:
         input:
           pools: "vfrsDAI"
 
+
+lowWater:
+  handler: src/controller/pool.lowWater
+  timeout: 900
+  events:
+    - schedule:
+        rate: cron(25 * * * ? *)
+
 # rebalanceCollateral:
 #   handler: src/controller/pool.rebalanceCollateral
 #   timeout: 900
@@ -161,7 +169,7 @@ accrueInterest:
 polygon_rebalance:
   handler: src/controller/pool.rebalance
   environment:
-    network: polygon
+    network: POLYGON
   timeout: 900
   events:
     - schedule:
