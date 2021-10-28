@@ -63,6 +63,7 @@ async function isRecentTransaction(data) {
   if (data.toAddress === undefined && data.strategy) {
     data.toAddress = data.strategy.address
   }
+  // eslint-disable-next-line complexity
   return getTransactionsPromise(fromTimestamp, data.name).then(function (response) {
     if (response && response.Items && response.Items.length > 0) {
       for (let i = 0; i < response.Items.length; i++) {
@@ -79,7 +80,7 @@ async function isRecentTransaction(data) {
             'Skipping %s for pool: %s, strategy: %s. Recent txn found in database: %s',
             data.operation,
             data.name,
-            data.strategy.address,
+            data.toAddress || data.strategy.address,
             transaction.transactionHash
           )
           return true

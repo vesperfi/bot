@@ -11,6 +11,7 @@ const {Status} = require('../enum/status')
 const {FlashbotsBundleProvider} = require('@flashbots/ethers-provider-bundle')
 const FEE_ERROR = 'max fee per gas less than block base fee'
 const GAS_MULTIPLIER = 160
+const ONE_GWEI = 1000000000
 
 async function sendSignedTxnsToMiner(signedTransactions, blockFromNow = 1) {
   // flashbots do not support polygon network.
@@ -65,7 +66,7 @@ function prepareSignedTxn(params, contractObj, methodName, methodArgs) {
     const logger = getLogger()
     logger.info(
       'Preparing transaction operation: %s, pool: %s, nonce: %s, network: %s, ' +
-        'maxFeePerGas: %s, maxPriorityFeePerGas: %s, toAddress: %s',
+        'maxFeePerGas: %s, priority: %s, toAddress: %s',
       params.operation,
       params.pool,
       params.nonce,
@@ -94,8 +95,9 @@ function prepareSignedTxn(params, contractObj, methodName, methodArgs) {
       } else {
         txnParams.type = config.vesper.txnType
         txnParams.maxFeePerGas = BN.from(params.gasPrice).toHexString()
-        txnParams.maxPriorityFeePerGas = BN.from(params.priority + 1)
-          .mul(100000000)
+        const blockingTxnWeight = params.isBlockingTxn ? 1 : 0
+        txnParams.maxPriorityFeePerGas = BN.from(params.priority + 1 + blockingTxnWeight)
+          .mul(ONE_GWEI)
           .toHexString()
       }
       return contractObj.signer.signTransaction(txnParams)

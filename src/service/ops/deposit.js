@@ -3,7 +3,7 @@
 const config = require('config')
 const {BigNumber: BN} = require('ethers')
 const {isRecentTransaction} = require('../recent')
-const {getGasPrice, isGasPriceAffordable, getWallet} = require('../../ethers/eth')
+const {getGasPrice, getWallet} = require('../../ethers/eth')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
 const {send} = require('../transaction')
@@ -40,14 +40,9 @@ function isEnoughFundAvailable(data) {
 }
 
 async function shouldSkipTheJob(data) {
-  return isGasPriceAffordable().then(function (result) {
-    if (result) {
-      return isEnoughFundAvailable(data).then(function (enoughFund) {
-        if (enoughFund) {
-          return isRecentTransaction(data)
-        }
-        return true
-      })
+  return isEnoughFundAvailable(data).then(function (enoughFund) {
+    if (enoughFund) {
+      return isRecentTransaction(data)
     }
     return true
   })
@@ -63,6 +58,7 @@ function run(data) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.strategy.address,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address

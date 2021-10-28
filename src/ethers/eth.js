@@ -4,7 +4,6 @@ const ethers = require('ethers')
 const Secret = require('../util/secret')
 const Wallet = ethers.Wallet
 const {BigNumber: BN} = require('ethers')
-const {getLogger} = require('../util/logger')
 const {Status} = require('../enum/status')
 const {Env} = require('../enum/env')
 const {Network, FORK_ETH_URL} = require('../enum/network')
@@ -55,34 +54,26 @@ async function getWallet(isFlashbotWallet = false) {
 }
 
 function getGasPrice(blockingTxnGasPrice = 0) {
-  let gasPrice = 0
   return getProvider()
     .getFeeData()
     .then(function (feeData) {
-      gasPrice = BN.from(feeData.gasPrice)
-        .mul(BN.from(100 + config.vesper.gasPriceVariationPercentage))
-        .div(100)
-        .toString()
+      let gasPrice = feeData.gasPrice.gt(BN.from(config.vesper.maxTxnGasPrice))
+        ? config.vesper.maxTxnGasPrice
+        : feeData.gasPrice
 
       if (BN.from(gasPrice).lte(BN.from(blockingTxnGasPrice))) {
         gasPrice = BN.from(gasPrice)
           .mul(BN.from(100 + config.vesper.gasPriceVariationPercentage))
           .div(100)
           .toString()
+      } else {
+        gasPrice = BN.from(gasPrice)
+          .mul(BN.from(100 - config.vesper.gasPriceVariationPercentage))
+          .div(100)
+          .toString()
       }
       return gasPrice
     })
-}
-
-function isGasPriceAffordable() {
-  return getGasPrice().then(function (gasPrice) {
-    if (BN.from(gasPrice).gt(BN.from(config.vesper.ignoreTxnAboveGasPrice).mul(1000000000))) {
-      const logger = getLogger()
-      logger.warn('Ignoring operation due to high gas price : %s ', gasPrice)
-      return false
-    }
-    return true
-  })
 }
 
 function getStartBlockNumber(_blockCount) {
@@ -125,6 +116,5 @@ module.exports = {
   getGasPrice,
   getTxnStatusFromChain,
   getStartBlockNumber,
-  isGasPriceAffordable,
   getBalance,
 }

@@ -10,6 +10,7 @@ const updateOracles = require('./updateOracles')
 const claimComp = require('../../service/ops/claimComp')
 const {getContractMetadata} = require('../../util/contract')
 const {executeJob} = require('../runner')
+const {isRecentTransaction} = require('../recent')
 const {ignoreTransactionError} = require('../../util/transactionUtil')
 const {update} = require('../../db/transactionDao')
 const {Status} = require('../../enum/status')
@@ -75,7 +76,12 @@ async function after(data) {
           }
         })
         // Submit replaced transaction
-        return executeJob({...blockingTxn, ...meta})
+        return isRecentTransaction({...blockingTxn, ...meta}).then(function (recent) {
+          if (!recent) {
+            return executeJob({...blockingTxn, ...meta})
+          }
+          return data
+        })
       })
     })
   }

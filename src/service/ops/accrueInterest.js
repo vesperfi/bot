@@ -34,6 +34,7 @@ function run(data) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.toAddress,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address

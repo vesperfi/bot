@@ -3,7 +3,7 @@
 
 const config = require('config')
 const ethers = require('ethers')
-const {getGasPrice, isGasPriceAffordable, getWallet, getBalance} = require('../../ethers/eth')
+const {getGasPrice, getWallet, getBalance} = require('../../ethers/eth')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
 const {isRecentTransaction} = require('../recent')
@@ -53,16 +53,11 @@ function isEnoughFundAvailable(data) {
 }
 
 async function shouldSkipTheJob(data) {
-  return isGasPriceAffordable().then(function (result) {
-    if (result) {
-      return Promise.all([isRecentTransaction(data), isEnoughFundAvailable(data)]).then(function ([
-        isRecent,
-        enoughBalance,
-      ]) {
-        return isRecent || !enoughBalance
-      })
-    }
-    return true
+  return Promise.all([isRecentTransaction(data), isEnoughFundAvailable(data)]).then(function ([
+    isRecent,
+    enoughBalance,
+  ]) {
+    return isRecent || !enoughBalance
   })
 }
 
@@ -77,6 +72,7 @@ function run(data) {
       operation: data.operation,
       toAddress: data.toAddress,
       assetAddress: data.assetAddress,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address

@@ -5,6 +5,7 @@ const {getLogger} = require('../util/logger')
 const {getNetwork} = require('../ethers/eth')
 
 function save(params) {
+  delete params.isBlockingTxn
   return new TransactionTable(params).save().then(function () {
     const logger = getLogger()
     logger.info(
@@ -16,6 +17,7 @@ function save(params) {
 }
 
 function update(params) {
+  delete params.isBlockingTxn
   return new TransactionTable(params).update().then(function () {
     const logger = getLogger()
     logger.info(
