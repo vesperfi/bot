@@ -5,7 +5,7 @@ const ethers = require('ethers')
 const {getPriority} = require('../../enum/priority')
 const {BigNumber: BN} = require('ethers')
 const {Operation} = require('../../enum/operation')
-const {getGasPrice, getWallet, isGasPriceAffordable, getProvider} = require('../../ethers/eth')
+const {getGasPrice, getWallet, getProvider} = require('../../ethers/eth')
 const {isRecentTransaction} = require('../recent')
 const {send} = require('../transaction')
 const {getTokenQuote} = require('../../util/swapper')
@@ -30,21 +30,16 @@ function getTotalComp() {
 }
 
 async function shouldSkipTheJob(data) {
-  return isGasPriceAffordable().then(function (result) {
-    if (result) {
-      return getTotalComp().then(function (totalComp) {
-        if (totalComp.gt(BN.from(config.vesper.claimComp.minBalance))) {
-          return isRecentTransaction(data)
-        }
-        const logger = getLogger()
-        logger.info(
-          'Total accumulated COMP : %s is less than minimum required COMP : %s, Skipping operation',
-          totalComp,
-          config.vesper.claimComp.minBalance
-        )
-        return true
-      })
+  return getTotalComp().then(function (totalComp) {
+    if (totalComp.gt(BN.from(config.vesper.claimComp.minBalance))) {
+      return isRecentTransaction(data)
     }
+    const logger = getLogger()
+    logger.info(
+      'Total accumulated COMP : %s is less than minimum required COMP : %s, Skipping operation',
+      totalComp,
+      config.vesper.claimComp.minBalance
+    )
     return true
   })
 }
@@ -60,7 +55,7 @@ async function getTokenBalance(token, wallet) {
 
 function getTokenForCompClaim(wallet) {
   // Fetch whitelistedTokens from minter but using `whitelistedTokens` method ABI from treasury.
-  return new ethers.Contract(vesper.minter, treasuryAbi, wallet.provider) 
+  return new ethers.Contract(vesper.minter, treasuryAbi, wallet.provider)
     .whitelistedTokens()
     .then(function (addressList) {
       return new ethers.Contract(addressList, addressListAbi, wallet.provider).length().then(function (_length) {
@@ -100,6 +95,7 @@ function run(data) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: vesper.treasury,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address

@@ -6,7 +6,7 @@ const {isRecentTransaction} = require('../recent')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
 // const {send} = require('../transaction')
-const {getGasPrice, getProvider} = require('../../ethers/eth')
+const {getProvider} = require('../../ethers/eth')
 const {getWallet} = require('../../ethers/eth')
 const strategyAbi = require('../../abi/strategy.json')
 const {getLogger} = require('../../util/logger')
@@ -42,23 +42,25 @@ async function shouldSkipTheJob(data) {
 
 function run(data) {
   const priority = config.vesper[data.operation].priority || config.vesper.priority
-  return getGasPrice(data.blockingTxnGasPrice).then(function (gasPrice) {
-    const params = {
-      pool: data.name,
-      nonce: data.nonce,
-      operation,
-      priority: getPriority(priority),
-      gasPrice,
-      toAddress: data.strategy.address,
-    }
-    return getWallet().then(function (wallet) {
-      params.fromAddress = wallet.address
-      // TODO Temp commented
-      // const contract = new ethers.Contract(params.toAddress, strategyAbi, wallet)
-      // return send(params, contract, params.operation)
-      return data
+  return getProvider()
+    .getFeeData()
+    .then(function (feeData) {
+      const params = {
+        pool: data.name,
+        nonce: data.nonce,
+        operation,
+        priority: getPriority(priority),
+        gasPrice: feeData.gasPrice,
+        toAddress: data.strategy.address,
+      }
+      return getWallet().then(function (wallet) {
+        params.fromAddress = wallet.address
+        // TODO Temp commented
+        // const contract = new ethers.Contract(params.toAddress, strategyAbi, wallet)
+        // return send(params, contract, params.operation)
+        return data
+      })
     })
-  })
 }
 
 async function prepare(input) {

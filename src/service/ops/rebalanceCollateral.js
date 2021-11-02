@@ -7,7 +7,7 @@ const {isRecentTransaction} = require('../recent')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
 const {send} = require('../transaction')
-const {getGasPrice, isGasPriceAffordable, getWallet} = require('../../ethers/eth')
+const {getGasPrice, getWallet} = require('../../ethers/eth')
 const strategyAbi = require('../../abi/strategy.json')
 const operation = Operation.REBALANCE_COLLATERAL
 
@@ -38,19 +38,14 @@ function isLowWater(data) {
 }
 
 async function shouldSkipTheJob(data) {
-  return isGasPriceAffordable().then(function (result) {
-    if (result) {
-      if (!data.strategy.makerVaultInfo) {
-        // return true if not maker.
-        return true
-      }
-      if (isZeroFund(data) || (!isHighWater(data) && !isLowWater(data))) {
-        return true
-      }
-      return isRecentTransaction(data)
-    }
+  if (!data.strategy.makerVaultInfo) {
+    // return true if not maker.
     return true
-  })
+  }
+  if (isZeroFund(data) || (!isHighWater(data) && !isLowWater(data))) {
+    return true
+  }
+  return isRecentTransaction(data)
 }
 
 function run(data) {
@@ -63,6 +58,7 @@ function run(data) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.strategy.address,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address

@@ -8,7 +8,7 @@
     "pendingTime": 1,
     "minimumFeeTransferAmount": 5000,
     "gasPriceVariationPercentage": 15,
-    "ignoreTxnAboveGasPrice": 150,
+    "maxTxnGasPrice": 150000000000,
     "priority": "low",
     "flashBotGasMultiplier": 160,
     "treasury": "0x9dfC7054B78E6f48f2D8e064B95B4251fc2E9692",
@@ -112,6 +112,11 @@
           "address": "0xca0c34a3f35520b9490c1d58b35a19ab64014d80",
           "minBalance": "1000000000000000000000",
           "symbol": "vDAI"
+        },
+        {
+          "address": "0x0538c8bac84e95a9df8ac10aad17dbe81b9e36ee",
+          "minBalance": "1000000000000000000000",
+          "symbol": "vaDAI"
         },
         {
           "address": "0x0a27e910aee974d05000e05eab8a4b8ebd93d40c",

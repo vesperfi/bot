@@ -32,7 +32,7 @@ function isLegacyPoolStrategy(name) {
 }
 
 function getMaxAllowedGasPrice() {
-  return BN.from(config.vesper.ignoreTxnAboveGasPrice).mul(1000000000)
+  return BN.from(config.vesper.maxTxnGasPrice)
 }
 
 function isGasPriceAffordable(data) {
@@ -113,6 +113,7 @@ function run(data, contract) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.toAddress,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return send(params, contract, params.operation)
   })

@@ -3,7 +3,7 @@
 const config = require('config')
 const ethers = require('ethers')
 const {isRecentTransaction} = require('../recent')
-const {getGasPrice, isGasPriceAffordable} = require('../../ethers/eth')
+const {getGasPrice} = require('../../ethers/eth')
 const {getPriority} = require('../../enum/priority')
 const {Operation} = require('../../enum/operation')
 const {send} = require('../transaction')
@@ -12,12 +12,7 @@ const swapAbi = require('../../abi/swap.json')
 const operation = Operation.UPDATE_ORACLES
 
 async function shouldSkipTheJob(data) {
-  return isGasPriceAffordable().then(function (result) {
-    if (result) {
-      return isRecentTransaction(data)
-    }
-    return true
-  })
+  return isRecentTransaction(data)
 }
 
 function run(data) {
@@ -30,6 +25,7 @@ function run(data) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.toAddress,
+      isBlockingTxn: !!data.blockingTxnGasPrice
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address
