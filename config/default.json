@@ -104,8 +104,13 @@
           "symbol": "vETH"
         },
         {
+          "address": "0xd1c117319b3595fbc39b471ab1fd485629eb05f2",
+          "minBalance": "400000000000000000",
+          "symbol": "vaETH"
+        },
+        {
           "address": "0x4b2e76ebbc9f2923d83f5fbde695d8733db1a17b",
-          "minBalance": "2000000000000000",
+          "minBalance": "20000000000000000",
           "symbol": "vWBTC"
         },
         {

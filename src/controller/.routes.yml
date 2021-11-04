@@ -12,34 +12,30 @@ rebalance:
   timeout: 900
   events:
     # Legacy V2 pools with single strategy
+    
     - schedule:
-        rate: cron(0 3-6,12-18 ? * * *)
-        input:
-          pools: "vBetaUSDC"
-
-    - schedule:
-        rate: cron(5 3-6,12-18 ? * * *)
+        rate: cron(5 3-6,14-18 ? * * *)
         input:
           pools: "vDAI"
           version: "2.x"
 
     - schedule:
-        rate: cron(45 3-6,12-18 ? * * *)
+        rate: cron(45 3-6,14-18 ? * * *)
         input:
           pools: "vETH"
 
     - schedule:
-        rate: cron(55 3-6,12-18 ? * * *)
+        rate: cron(55 3-6,14-18 ? * * *)
         input:
           pools: "vWBTC"
 
     - schedule:
-        rate: cron(50 3-6,12-18 ? * * *)
+        rate: cron(50 3-6,14-18 ? * * *)
         input:
           pools: "vUSDC"
 
     - schedule:
-        rate: cron(25 3-6,12-18 ? * * *)
+        rate: cron(25 3-6,14-18 ? * * *)
         input:
           pools: "vLINK"
 
@@ -51,48 +47,48 @@ rebalance:
 
     # V3 pools with multiple strategies
     - schedule:
-        rate: cron(40 3-6,12-18 ? * * *)
+        rate: cron(40 3-6,14-18 ? * * *)
         input:
           pools: "vUSDT"
 
     - schedule:
-        rate: cron(35 3-6,12-18 ? * * *)
+        rate: cron(35 3-6,14-18 ? * * *)
         input:
           pools: "vUNI"
 
-    - schedule:
-        rate: cron(30 3-6,12-18 ? * * *)
-        input:
-          pools: "vaDAI"
+    # - schedule:
+    #     rate: cron(30 3-6,14-18 ? * * *)
+    #     input:
+    #       pools: "vaDAI"
 
     - schedule:
-        rate: cron(25 3-6,12-18 ? * * *)
+        rate: cron(25 3-6,14-18 ? * * *)
         input:
           pools: "veETH-DAI"
 
     - schedule:
-        rate: cron(20 3-6,12-18 ? * * *)
+        rate: cron(20 3-6,14-18 ? * * *)
         input:
           pools: "vDAI"
           version: "3.0.4"
 
-    - schedule:
-        rate: cron(15 3-6,12-18 ? * * *)
-        input:
-          pools: "vaETH"
+    # - schedule:
+    #     rate: cron(15 3-6,14-18 ? * * *)
+    #     input:
+    #       pools: "vaETH"
+
+    # - schedule:
+    #     rate: cron(45 3-6,14-18 ? * * *)
+    #     input:
+    #       pools: "vaWBTC"
 
     - schedule:
-        rate: cron(45 3-6,12-18 ? * * *)
-        input:
-          pools: "vaWBTC"
-
-    - schedule:
-        rate: cron(50 3-6,12-18 ? * * *)
+        rate: cron(50 3-6,14-18 ? * * *)
         input:
           pools: "vfrcDAI"
 
     - schedule:
-        rate: cron(45 3-6,12-18 ? * * *)
+        rate: cron(45 3-6,14-18 ? * * *)
         input:
           pools: "vfrsDAI"
 
@@ -173,23 +169,23 @@ polygon_rebalance:
   timeout: 900
   events:
     - schedule:
-        rate: cron(0 3-6,12-18 ? * * *)
+        rate: cron(0 3-6,14-18 ? * * *)
         input:
           pools: "vDAI"
     - schedule:
-        rate: cron(10 3-6,12-18 ? * * *)
+        rate: cron(10 3-6,14-18 ? * * *)
         input:
           pools: "vUSDC"
     - schedule:
-        rate: cron(15 3-6,12-18 ? * * *)
+        rate: cron(15 3-6,14-18 ? * * *)
         input:
           pools: "vUSDT"
     - schedule:
-        rate: cron(15 3-6,12-18 ? * * *)
+        rate: cron(15 3-6,14-18 ? * * *)
         input:
           pools: "vWBTC"
     - schedule:
-        rate: cron(20 3-6,12-18 ? * * *)
+        rate: cron(20 3-6,14-18 ? * * *)
         input:
           pools: "vWETH"
 

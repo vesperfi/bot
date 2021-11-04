@@ -6,6 +6,8 @@ const Wallet = ethers.Wallet
 const {BigNumber: BN} = require('ethers')
 const {Status} = require('../enum/status')
 const {Env} = require('../enum/env')
+const NodeCache = require('node-cache')
+const _cache = new NodeCache({stdTTL: 300, checkperiod: 600})
 const {Network, FORK_ETH_URL} = require('../enum/network')
 const vesperERC20TokenAbi = require('../abi/ERC20Abi.json')
 
@@ -36,7 +38,10 @@ function getNetworkUrl() {
 }
 
 function getProvider() {
-  return new ethers.providers.JsonRpcProvider(getNetworkUrl())
+  if (!_cache.get('_PROVIDER')) {
+    _cache.set('_PROVIDER', new ethers.providers.JsonRpcProvider(getNetworkUrl()))
+  }
+  return _cache.get('_PROVIDER')
 }
 
 function createWallet(mnemonic) {
@@ -51,6 +56,17 @@ async function getWallet(isFlashbotWallet = false) {
     })
   }
   return createWallet(process.env.MNEMONIC)
+}
+
+function getFlashBotGasPrice() {
+  return getProvider()
+    .getFeeData()
+    .then(function (feeData) {
+      const gasPrice = feeData.gasPrice.gt(config.vesper.maxTxnGasPrice)
+        ? config.vesper.maxTxnGasPrice
+        : feeData.gasPrice
+      return BN.from(gasPrice).mul(BN.from(125)).div(100).toString()
+    })
 }
 
 function getGasPrice(blockingTxnGasPrice = 0) {
@@ -114,6 +130,7 @@ module.exports = {
   getProvider,
   getWallet,
   getGasPrice,
+  getFlashBotGasPrice,
   getTxnStatusFromChain,
   getStartBlockNumber,
   getBalance,

@@ -36,7 +36,7 @@ function run(data) {
         nonce: data.nonce,
         operation: data.operation,
         priority: getPriority(priority),
-        gasPrice: feeData.gasPrice,
+        gasPrice: feeData.gasPrice.toString(),
         toAddress: data.strategy.address,
       }
       return getWallet().then(function (wallet) {

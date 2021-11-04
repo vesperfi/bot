@@ -3,7 +3,7 @@ const {BigNumber: BN} = require('ethers')
 const ethers = require('ethers')
 const config = require('config')
 const {saveTransaction} = require('../util/transactionUtil')
-const {getGasPrice, getProvider, getNetwork, getChainId, isPolygon, getNetworkUrl} = require('../ethers/eth')
+const {getFlashBotGasPrice, getProvider, getNetwork, getChainId, isPolygon, getNetworkUrl} = require('../ethers/eth')
 const {FORK_ETH_URL} = require('../enum/network')
 const {getLogger} = require('../util/logger')
 const {Priority} = require('../enum/priority')
@@ -95,8 +95,8 @@ function prepareSignedTxn(params, contractObj, methodName, methodArgs) {
       } else {
         txnParams.type = config.vesper.txnType
         txnParams.maxFeePerGas = BN.from(params.gasPrice).toHexString()
-        const blockingTxnWeight = params.isBlockingTxn ? 1 : 0
-        txnParams.maxPriorityFeePerGas = BN.from(params.priority + 1 + blockingTxnWeight)
+        const blockingTxnWeight = params.isBlockingTxn ? 2 : 0
+        txnParams.maxPriorityFeePerGas = BN.from(params.priority + 2 + blockingTxnWeight)
           .mul(ONE_GWEI)
           .toHexString()
       }
@@ -106,7 +106,7 @@ function prepareSignedTxn(params, contractObj, methodName, methodArgs) {
 }
 
 async function sendViaFlashBot(params, contractObj, methodName, methodArgs) {
-  return getGasPrice().then(function (gasPrice) {
+  return getFlashBotGasPrice().then(function (gasPrice) {
     params.gasPrice = gasPrice
     params.priority = Priority.FLASHBOT
     return prepareSignedTxn(params, contractObj, methodName, methodArgs).then(function (signedTransaction) {
@@ -120,7 +120,7 @@ async function sendViaFlashBot(params, contractObj, methodName, methodArgs) {
 async function send(params, contractObj, methodName, methodArgs) {
   params.network = getNetwork()
   if (params.sendViaFlashBots) {
-    const retryCount = 5
+    const retryCount = 10
     for (let count = 0; count < retryCount; count++) {
       const result = await sendViaFlashBot(params, contractObj, methodName, methodArgs)
       if (result === Status.SUCCESS) return Status.SUCCESS
