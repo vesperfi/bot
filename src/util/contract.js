@@ -45,12 +45,13 @@ function getContractMetadata(input = []) {
       return contracts
     })
     .catch(function (err) {
-      if (input.retryCount === 0 && err.response.status === 504) {
-        input.retryCount = input.retryCount + 1
-        const logger = getLogger()
+      const logger = getLogger()
+      if (input.retryCount <= 1 && err.response.status === 504) {
+        input.retryCount = input.retryCount + 1        
         logger.warn('Failed to get contract metadata for input %s, Retrying...', JSON.stringify(input))
         return getContractMetadata(input)
       }
+      logger.warn('Failed to get contract metadata, give up', input)
       return contracts
     })
 }

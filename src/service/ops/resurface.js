@@ -50,7 +50,7 @@ function run(data) {
         nonce: data.nonce,
         operation,
         priority: getPriority(priority),
-        gasPrice: feeData.gasPrice,
+        gasPrice: feeData.gasPrice.toString(),
         toAddress: data.strategy.address,
       }
       return getWallet().then(function (wallet) {
@@ -72,7 +72,9 @@ async function before(data) {
 }
 
 async function after(data) {
-  return require('./pool').after(data)
+  // TODO Temp commented
+  // return require('./pool').after(data)
+  return data
 }
 
 async function error(data, _error) {
