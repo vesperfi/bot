@@ -82,7 +82,7 @@ function run(data) {
       toAddress: data.toAddress,
       payeeAddress: data.payeeAddress,
       assetAddress: data.assetAddress,
-      isBlockingTxn: !!data.blockingTxnGasPrice
+      isBlockingTxn: !!data.blockingTxnGasPrice,
     }
     return getWallet().then(function (wallet) {
       params.fromAddress = wallet.address
@@ -97,16 +97,18 @@ function prepare() {
   return getPayeesAddress(revenueConfig.address).then(function (payeesAddresses) {
     const data = []
     for (const payeeAddress of payeesAddresses) {
-      for (const token of revenueConfig.tokens) {
-        data.push({
-          operationObj: module.exports,
-          toAddress: revenueConfig.address,
-          operation: Operation.SPLIT_REVENUE_ERC20,
-          payeeAddress,
-          assetAddress: token.address,
-          name: token.symbol,
-          minBalance: token.minBalance,
-        })
+      if (revenueConfig.parties.includes(payeeAddress)) {
+        for (const token of revenueConfig.tokens) {
+          data.push({
+            operationObj: module.exports,
+            toAddress: revenueConfig.address,
+            operation: Operation.SPLIT_REVENUE_ERC20,
+            payeeAddress,
+            assetAddress: token.address,
+            name: token.symbol,
+            minBalance: token.minBalance,
+          })
+        }
       }
     }
     return data

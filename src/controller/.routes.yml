@@ -14,83 +14,106 @@ rebalance:
     # Legacy V2 pools with single strategy
     
     - schedule:
-        rate: cron(5 3-6,14-18 ? * * *)
+        rate: cron(5 3-6,15-18 ? * * *)
         input:
           pools: "vDAI"
           version: "2.x"
 
     - schedule:
-        rate: cron(45 3-6,14-18 ? * * *)
+        rate: cron(45 3-6,15-18 ? * * *)
         input:
           pools: "vETH"
 
     - schedule:
-        rate: cron(55 3-6,14-18 ? * * *)
+        rate: cron(55 3-6,15-18 ? * * *)
         input:
           pools: "vWBTC"
 
     - schedule:
-        rate: cron(50 3-6,14-18 ? * * *)
+        rate: cron(50 3-6,15-18 ? * * *)
         input:
           pools: "vUSDC"
 
     - schedule:
-        rate: cron(25 3-6,14-18 ? * * *)
+        rate: cron(25 3-6,15-18 ? * * *)
         input:
           pools: "vLINK"
 
     - schedule:
-        rate: cron(10 1,13 * * ? *)
+        rate: cron(10 13 * * ? *)
         input:
           pools: "vVSP"
           sendViaFlashBots: false
 
     # V3 pools with multiple strategies
     - schedule:
-        rate: cron(40 3-6,14-18 ? * * *)
+        rate: cron(40 3-6,15-18 ? * * *)
         input:
           pools: "vUSDT"
 
     - schedule:
-        rate: cron(35 3-6,14-18 ? * * *)
+        rate: cron(35 3-6,15-18 ? * * *)
         input:
           pools: "vUNI"
 
-    # - schedule:
-    #     rate: cron(30 3-6,14-18 ? * * *)
-    #     input:
-    #       pools: "vaDAI"
+    - schedule:
+        rate: cron(30 3-6,15-18 ? * * *)
+        input:
+          pools: "vaDAI"
 
     - schedule:
-        rate: cron(25 3-6,14-18 ? * * *)
+        rate: cron(25 3-6,15-18 ? * * *)
         input:
           pools: "veETH-DAI"
 
+    # - schedule:
+    #     rate: cron(20 3-6,15-18 ? * * *)
+    #     input:
+    #       pools: "vDAI"
+    #       version: "3.0.4"
+
+
     - schedule:
-        rate: cron(20 3-6,14-18 ? * * *)
+        rate: cron(15 3-6,15-18 ? * * *)
         input:
-          pools: "vDAI"
-          version: "3.0.4"
+          pools: "vaETH"
+
+    - schedule:
+        rate: cron(45 3-6,15-18 ? * * *)
+        input:
+          pools: "vaWBTC"
 
     # - schedule:
-    #     rate: cron(15 3-6,14-18 ? * * *)
+    #     rate: cron(50 3-6,15-18 ? * * *)
     #     input:
-    #       pools: "vaETH"
+    #       pools: "vfrcDAI"
 
     # - schedule:
-    #     rate: cron(45 3-6,14-18 ? * * *)
+    #     rate: cron(45 3-6,15-18 ? * * *)
     #     input:
-    #       pools: "vaWBTC"
+    #       pools: "vfrsDAI"
+
+### Orbit pools
+    - schedule:
+        rate: cron(22 3-6,15-18 ? * * *)
+        input:
+          pools: "vaALUSD"
 
     - schedule:
-        rate: cron(50 3-6,14-18 ? * * *)
+        rate: cron(24 3-6,15-18 ? * * *)
         input:
-          pools: "vfrcDAI"
+          pools: "vaDPI"
 
     - schedule:
-        rate: cron(45 3-6,14-18 ? * * *)
+        rate: cron(26 3-6,15-18 ? * * *)
         input:
-          pools: "vfrsDAI"
+          pools: "vaFEI"
+
+    - schedule:
+        rate: cron(28 3-6,15-18 ? * * *)
+        input:
+          pools: "vaFRAX"
+
 
 
 lowWater:
@@ -122,16 +145,16 @@ splitRevenue:
   handler: src/controller/pool.splitRevenue
   timeout: 900
   events:
-    - schedule: cron(30 10 ? * 7 *)
+    - schedule: cron(30 10 ? * 1 *)
     - http:
         path: /splitRevenue
         method: get
 
-feeTransfer:
-  handler: src/controller/pool.feeTransfer
-  timeout: 900
-  events:
-    - schedule: cron(40 10 ? * 3 *)
+# feeTransfer:
+#   handler: src/controller/pool.feeTransfer
+#   timeout: 900
+#   events:
+#     - schedule: cron(40 10 ? * 3 *)
 
 getRebalanceSummary:
   handler: src/controller/transaction.getRebalanceSummary
@@ -169,23 +192,23 @@ polygon_rebalance:
   timeout: 900
   events:
     - schedule:
-        rate: cron(0 3-6,14-18 ? * * *)
+        rate: cron(0 3-6,15-18 ? * * *)
         input:
           pools: "vDAI"
     - schedule:
-        rate: cron(10 3-6,14-18 ? * * *)
+        rate: cron(10 3-6,15-18 ? * * *)
         input:
           pools: "vUSDC"
     - schedule:
-        rate: cron(15 3-6,14-18 ? * * *)
+        rate: cron(15 3-6,15-18 ? * * *)
         input:
           pools: "vUSDT"
     - schedule:
-        rate: cron(15 3-6,14-18 ? * * *)
+        rate: cron(15 3-6,15-18 ? * * *)
         input:
           pools: "vWBTC"
     - schedule:
-        rate: cron(20 3-6,14-18 ? * * *)
+        rate: cron(20 3-6,15-18 ? * * *)
         input:
           pools: "vWETH"
 

@@ -4,11 +4,12 @@
     "dashboardApiUrl": "https://api.vesper.finance/dashboard?version=2",
     "polygonDashboardApiUrl": "https://api-polygon.vesper.bloqrock.net/dashboard?version=2",
     "txnType": 2,
-    "embargo": 64,
+    "embargo": 72,
     "pendingTime": 1,
     "minimumFeeTransferAmount": 5000,
     "gasPriceVariationPercentage": 15,
     "maxTxnGasPrice": 150000000000,
+    "reduceGasPriceAbove": 80000000000,
     "priority": "low",
     "flashBotGasMultiplier": 160,
     "treasury": "0x9dfC7054B78E6f48f2D8e064B95B4251fc2E9692",
@@ -34,12 +35,21 @@
       "vfrsDAI": {
         "embargo": 160
       },
-      "vaDAI": {
-        "embargo": 40
+      "vDAI": {
+        "embargo": 160
       },
-      "vUNI": {
-        "embargo": 40
-      }
+      "vETH": {
+        "embargo": 110
+      },
+      "vaDAI": {
+        "embargo": 42
+      },
+      "skipStrategies": [
+        "0xd10427bbd5D20f6b3f8c50a9447d8ac50CDC15bf",
+        "0x78041341e79693953AB49f5040d3Ac8cA8cd2397",
+        "0x2962741a2aec7627F64E77a5808A025F49ea17DA",
+        "0x43CeCF2e018FEE7EE94410f85FcefeD2a3843ef2"
+      ]
     },
     "claimComp": {
       "minBalance": "3000000000000000000"
@@ -92,6 +102,7 @@
     "revenueConfig": {
       "address": "0xAdB5ef0CA9029b340bCCDEf005aef442C7F91C96",
       "payeeCount": 2,
+      "parties": ["0xbA4cFE5741b357FA371b506e5db0774aBFeCf8Fc"],
       "tokens": [
         {
           "address": "0x0C49066C0808Ee8c673553B7cbd99BCC9ABf113d",

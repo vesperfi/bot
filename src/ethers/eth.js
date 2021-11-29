@@ -82,13 +82,14 @@ function getGasPrice(blockingTxnGasPrice = 0) {
           .mul(BN.from(100 + config.vesper.gasPriceVariationPercentage))
           .div(100)
           .toString()
-      } else {
+      } else if (BN.from(gasPrice).gte(BN.from(config.vesper.reduceGasPriceAbove))) {
+        // Reduce gasPrice
         gasPrice = BN.from(gasPrice)
           .mul(BN.from(100 - config.vesper.gasPriceVariationPercentage))
           .div(100)
           .toString()
       }
-      return gasPrice
+      return BN.from(gasPrice).toString()
     })
 }
 
