@@ -49,7 +49,7 @@ In this function will deposit/withdraw fund from pool/strategies and market prov
 - Rebalance for one strategy
 
 ```
-   serverless invoke local --function rebalance --data '{"pools": "vUSDT", "strategy" : "Aave-Strategy-USDT"}'
+   serverless invoke local --function rebalance --data '{"pools": "vUSDT", "strategy" : "<<address>>"}'
 ```
 
 #### Revenue Splitter

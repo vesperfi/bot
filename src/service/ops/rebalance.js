@@ -113,7 +113,7 @@ function run(data, contract) {
       priority: getPriority(priority),
       gasPrice,
       toAddress: data.toAddress,
-      isBlockingTxn: !!data.blockingTxnGasPrice
+      isBlockingTxn: !!data.blockingTxnGasPrice,
     }
     return send(params, contract, params.operation)
   })
@@ -136,7 +136,12 @@ async function prepare(input) {
         strategyJob.sendViaFlashBots = input.sendViaFlashBots
         strategyJob.operationObj = module.exports
         strategyJob.strategy = strategy
-        jobsWithStrategies.push(strategyJob)
+        const logger = getLogger()
+        if (config.vesper.rebalance.skipStrategies.includes(strategy.address)) {
+          logger.warn('Blocked strategy, Skipping rebalance for strategy: %s', strategy.address)
+        } else {
+          jobsWithStrategies.push(strategyJob)
+        }
       })
     })
     return jobsWithStrategies

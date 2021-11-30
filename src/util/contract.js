@@ -3,7 +3,7 @@ const axios = require('axios')
 const {getDashboardApiUrl} = require('../ethers/eth')
 const {getLogger} = require('../util/logger')
 const status = 'operative'
-const allowedStages = ['prod', 'beta', 'alpha']
+const allowedStages = ['prod', 'beta', 'alpha', 'orbit']
 const feeCollector = 'Fee Collector'
 
 function getContractMetadata(input = []) {
@@ -37,7 +37,7 @@ function getContractMetadata(input = []) {
             })
             // When `strategy` is provided, filter it out from `strategies`
             if (strategy && item.strategies && item.strategies.length > 0) {
-              item.strategies = item.strategies.filter(_strategy => _strategy.info.split(':')[0] === strategy)
+              item.strategies = item.strategies.filter(_strategy => _strategy.address === strategy)
             }
           }
           contracts.push(item)
@@ -46,7 +46,7 @@ function getContractMetadata(input = []) {
     })
     .catch(function (err) {
       const logger = getLogger()
-      if (input.retryCount <= 1 && err.response.status === 504) {
+      if (input.retryCount <= 2 && err.response.status === 504) {
         input.retryCount = input.retryCount + 1        
         logger.warn('Failed to get contract metadata for input %s, Retrying...', JSON.stringify(input))
         return getContractMetadata(input)
