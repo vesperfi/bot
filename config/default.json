@@ -101,6 +101,7 @@
     },
     "revenueConfig": {
       "address": "0xAdB5ef0CA9029b340bCCDEf005aef442C7F91C96",
+      "buybackAddress": "0x9bcdf1130b20856f86267074de136c5902e314fe",
       "payeeCount": 2,
       "parties": ["0xbA4cFE5741b357FA371b506e5db0774aBFeCf8Fc"],
       "tokens": [
