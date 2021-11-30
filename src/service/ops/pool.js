@@ -5,6 +5,7 @@ const rebalanceCollateral = require('./rebalanceCollateral')
 const rebalance = require('./rebalance')
 const resurface = require('./resurface')
 const splitRevenue = require('./splitRevenue')
+const buybackUnwrap = require('./buybackUnwrap')
 const lowWater = require('./lowWater')
 const updateOracles = require('./updateOracles')
 const claimComp = require('../../service/ops/claimComp')
@@ -40,6 +41,7 @@ function getOperationObject(data) {
     rebalance,
     resurface,
     splitRevenue,
+    buybackUnwrap,
     updateOracles,
     claimComp,
     lowWater,

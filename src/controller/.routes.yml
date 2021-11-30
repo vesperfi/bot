@@ -149,6 +149,12 @@ splitRevenue:
     - http:
         path: /splitRevenue
         method: get
+        
+buybackUnwrap:
+  handler: src/controller/pool.buybackUnwrap
+  timeout: 900
+  events:
+    - schedule: cron(30 18 ? * 1 *)
 
 # feeTransfer:
 #   handler: src/controller/pool.feeTransfer

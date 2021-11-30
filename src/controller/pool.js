@@ -9,6 +9,7 @@ const lowWater = require('../service/ops/lowWater')
 const rebalance = require('../service/ops/rebalance')
 const resurface = require('../service/ops/resurface')
 const splitRevenue = require('../service/ops/splitRevenue')
+const buybackUnwrap = require('../service/ops/buybackUnwrap')
 const claimComp = require('../service/ops/claimComp')
 const feeTransfer = require('../service/ops/feeTransfer')
 const accrueInterest = require('../service/ops/accrueInterest')
@@ -28,6 +29,7 @@ async function execute(input) {
     rebalance,
     resurface,
     splitRevenue,
+    buybackUnwrap,
     claimComp,
     feeTransfer,
     accrueInterest,
@@ -90,6 +92,10 @@ module.exports.lowWater = () => {
 
 module.exports.splitRevenue = () => {
   return execute({operation: Operation.SPLIT_REVENUE_ERC20})
+}
+
+module.exports.buybackUnwrap = () => {
+  return execute({operation: Operation.BUYBACK_UNWRAP})
 }
 
 module.exports.claimComp = () => {
