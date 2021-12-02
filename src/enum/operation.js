@@ -11,6 +11,7 @@ const Operation = {
   FEE_TRANSFER: 'feeTransfer',
   ACCRUE_INTEREST: 'accrueInterest',
   LOW_WATER: 'lowWater',
+  BUYBACK_VSP: 'buybackVsp',
 }
 
 module.exports = {

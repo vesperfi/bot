@@ -63,6 +63,7 @@ serverless invoke local --function splitRevenue
 - `lowWater` - This function will call rebalance if a maker strategy is lowWater.
 - `feeTransfer` - This function will sweep erc20 tokens (vtokens) from strategies.
 - `updateOracles` - This function will update oracles.
+- `buybackVsp` - Buyback VSP using an asset with provided amount.
 
 
 #### V2 Pools Functions
